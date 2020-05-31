@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" xmlns:th="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8">
+    <title>管理员-发送通知</title>
+    <link rel="stylesheet" type="text/css" href="../../static/css/semantic.min.css" th:href="@{../css/semantic.min.css}">
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../../static/lib/editormd/editormd.js" th:src="@{../lib/editormd/editormd.js}"></script>
+    <link rel="stylesheet" href="../../static/lib/editormd/css/editormd.css" th:href="@{../lib/editormd/css/editormd.css}">
+    <script type="text/javascript" src="../../static/js/semantic.min.js" th:src="@{../js/semantic.min.js}"></script>
+    <link rel="stylesheet" type="text/css" href="../../static/css/common.css" th:href="@{../css/common.css}">
+    <script type="text/javascript" src="../../static/js/header.js" th:src="@{../js/header.js}">  </script>
+
+  </head>
+  <body>
+    <!-- 导航 -->
+    <div th:replace="/../common::header"></div>
+    <div class="ui container m_main_top">
+      <div class="ui vertical pointing menu" style="float:left;">
+        <a class=" item" href="/admin/userAudit">
+          用户审计
+        </a>
+        <a class="item" href="/admin/blogAudit">
+          博文审计
+        </a>
+        <a class="item" href="/admin/reportAudit">
+          举报审计
+        </a>
+        <a class="active item" href="/admin/informAudit">
+          发送通知
+        </a>
+      </div>
+      <div class="ui raised very padded segment m_middle_width">
+        <div class="">
+          <form class="" name="searchForm" action="/admin/searchInform" method="post">
+          <div class="ui fluid action input">
+            <input type="text" name="search" placeholder="搜索...">
+            <div onclick="document.forms['searchForm'].submit()" class="ui button">Search</div>
+          </div>
+          </form>
+        </div>
+        <div th:fragment="user" id="main">
+          <div class="editormd-dialog" id="abstractDiv" style="display: none;">
+                  <div class="editormd-dialog-header" style="cursor: move;">
+                      <strong class="editormd-dialog-title">通知</strong>
+                  </div>
+                  <input type="hidden" id="userId" name="" value="">
+                  <a href="javascript:;" class="fa fa-close editormd-dialog-close" onclick="msgbox(0);return false;"></a>
+                  <div class="editormd-dialog-container">
+                      <form class="editormd-form">
+                          <label>发送通知</label>
+                          <br>
+                          <textarea class="m_textarea" id="abstractText" placeholder="输入通知"></textarea>
+                          <div class="editormd-dialog-footer">
+                              <button type="button" class="editormd-btn" onclick="sendInform();">确定</button>
+                              <button type="button" class="editormd-btn" onclick="msgbox(0);">取消</button>
+                          </div>
+                      </form>
+                  </div>
+              </div>
+          <input type="hidden" name="" id="userSearch" th:value="${search}" value="">
+
+          <div class="ui celled list">
+            <div th:each="user:${users}">
+            <div class="item">
+              <img class="ui avatar image" th:src="${user.headPortrait}" src="../images/avatar/small/helen.jpg">
+              <button class="ui button" type="button" name="button" th:attr="data-commentid=${user.id}" onclick="send(this);" style="float:right;">发送通知</button>
+              <span class="content">
+              <a class="header" th:href="@{/blog/user(userId=${user.id})}" th:text="${user.nickname}">Snickerdoodle</a> #<span th:text="${user.id}"></span>
+              </span>
+            <div class="ui divider"></div>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+
+<script type="text/javascript">
+    $(function() {
+      $(".ui.dropdown").dropdown();
+    });
+
+    function sendInform() {
+        var userId = $("#userId").val();
+        var content = document.getElementById("abstractText").value;
+        var search = document.getElementById('userSearch').value;
+        $('#main').load("/admin/inform",
+            {
+            "userId":userId,
+            "content":content,
+            "search":search,
+        },function (responseText,statusTxt,xhr) {
+          msgbox(0);
+          alert("发送通知成功");
+        });
+    }
+
+    function send(obj) {
+      var userId = $(obj).data('commentid');
+      $("#userId").val(userId);
+      msgbox(1);
+    }
+
+    function msgbox(n){
+        document.getElementById('abstractDiv').style.display=n?'block':'none';     /* 点击按钮打开/关闭 对话框 */
+    }
+</script>
+
+  </body>
+</html>

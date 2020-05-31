@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.springframework.org/schema/mvc">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../../static/css/semantic.min.css" th:href="@{../css/semantic.min.css}">
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../../static/js/semantic.min.js" th:src="@{../js/semantic.min.js}"></script>
+    <link rel="stylesheet" type="text/css" href="../../static/css/common.css" th:href="@{../css/common.css}">
+    <link rel="stylesheet" type="text/css" href="../../static/css/write.css" th:href="@{../css/write.css}">
+    <link rel="stylesheet" href="../../static/lib/editormd/css/editormd.css" th:href="@{../lib/editormd/css/editormd.css}">
+    <script type="text/javascript" src="../../static/lib/editormd/editormd.js" th:src="@{../lib/editormd/editormd.js}"></script>
+    <script type="text/javascript" src="../../static/js/header.js" th:src="@{../js/header.js}">  </script>
+    <title>write</title>
+</head>
+<body style="overflow:auto;">
+<!-- 导航 -->
+<div th:replace="/../common::header"></div>
+
+
+<!-- main-->
+<div class="ui container m_main">
+    <div class="editormd-dialog" id="abstractDiv" >
+        <div class="editormd-dialog-header" style="cursor: move;">
+            <strong class="editormd-dialog-title">编辑文章摘要</strong>
+        </div>
+        <a href="javascript:;" class="fa fa-close editormd-dialog-close" onclick="msgbox(0);return false;"></a>
+        <div class="editormd-dialog-container">
+            <form class="editormd-form">
+                <label>摘要</label>
+                <br>
+                <textarea class="m_textarea" id="abstractText" placeholder="输入文章摘要" maxlength="200"></textarea>
+                <span class="textarea-comment-tip">还可以输入200个字符</span>
+                <div class="editormd-dialog-footer">
+                    <button type="button" class="editormd-btn"  onclick="saveAbstract();msgbox(0);">确定</button>
+                    <button type="button" class="editormd-btn"  onclick="msgbox(0);">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+  <form id="blog_form" class="ui form">
+    <div class="field">
+      <div class="ui left labeled input">
+        <div class="ui info selection compact dropdown label">
+          <input type="hidden" value="原创" name="copyright">
+          <i class="dropdown icon"></i>
+          <div class="text">原创</div>
+          <div class="menu">
+            <div class="item" data-value="原创">原创</div>
+            <div class="item" data-value="转载">转载</div>
+            <div class="item" data-value="翻译">翻译</div>
+          </div>
+        </div>
+        <input type="text" name="title" id="title" placeholder="标题">
+      </div>
+    </div>
+    <div class="field">
+      <div id="markdown-text" style="z-index: 2 !important;">
+        <textarea style="display:none" id="contentText">[TOC]</textarea>
+      </div>
+    </div>
+    <div class="field">
+        <div class="ui menu">
+          <div class="ui text item">模块分类：</div>
+          <div class="ui item info selection compact dropdown label">
+            <input type="hidden" value="学习" name="module">
+            <i class="dropdown icon m_center"></i>
+            <div class="text">学习</div>
+            <div class="menu">
+              <div class="item" data-value="学习">学习</div>
+              <div class="item" data-value="生活">生活</div>
+            </div>
+          </div>
+          <div class="item m_no_padding">
+            <div class="ui label" style="visibility:hidden;" id="label1div">
+              <input type="text" style="display:none;" name="tag1" id="tag1" autocomplete="off">
+              <a  id="label1" name="label1">
+              </a>
+              <a id="label1delete" href="javascript:void(0);" onclick="delabel(1)"><i class="delete icon m_dicon"></i></a>
+            </div>
+            <div class="ui label" style="visibility:hidden;" id="label2div">
+              <input type="text" style="display:none;" name="tag2" id="tag2" autocomplete="off">
+              <a  id="label2" name="label2">
+              </a>
+              <a id="label2delete" href="javascript:void(0);" onclick="delabel(2)"><i class="delete icon m_dicon"></i></a>
+            </div>
+            <div class="ui label" style="visibility:hidden;" id="label3div">
+              <input type="text" style="display:none;" name="tag3" id="tag3" autocomplete="off">
+              <a  id="label3" name="label3">
+              </a>
+              <a id="label3delete" href="javascript:void(0);" onclick="delabel(3)"><i class="delete icon m_dicon"></i></a>
+            </div>
+            <div class="ui label" style="visibility:hidden;" id="label4div">
+              <input type="text" style="display:none;" name="tag4" id="tag4" autocomplete="off">
+              <a  id="label4" name="label4">
+              </a>
+              <a id="label4delete" href="javascript:void(0);" onclick="delabel(4)"><i class="delete icon m_dicon"></i></a>
+            </div>
+            <div class="ui label" style="visibility:hidden;" id="label5div">
+              <input type="text" style="display:none;" name="tag5" id="tag5" autocomplete="off">
+              <a  id="label5" name="label5">
+              </a>
+              <a id="label5delete" href="javascript:void(0);" onclick="delabel(5)"><i class="delete icon m_dicon"></i></a>
+            </div>
+          </div>
+          <div class="right menu">
+          <div class="ui search item m_no_padding" id="searchlabel">
+            <div class="ui icon input">
+            <input class="prompt" type="text" placeholder="添加标签" id="labelinput">
+            <div class="ui icon button" id="labelsubmit" data-tooltip="添加标签" data-position="bottom center">
+              <i class="add icon"></i>
+            </div>
+            </div>
+            <div class="results"></div>
+          </div>
+          </div>
+        </div>
+    </div>
+    <div class="field m_small_top">
+      <div class="ui menu">
+      <div class="ui form item m_no_padding">
+        <div class="inline fields m_center">
+          <div class="field">
+            <div class="ui radio">
+              <input type="radio" value="open" name="frequency" checked="checked">
+              <label>公开</label>
+            </div>
+          </div>
+          <div class="field">
+            <div class="ui radio checkbox">
+              <input type="radio" value="privacy" name="frequency">
+              <label>私密</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ui toggle checkbox item">
+        <input type="checkbox" id="checkcomment" checked class="m_mini_left m_center" >
+        <label>允许评论</label><input id="comment" name="comment" type="hidden" value="1">
+      </div>
+      <div class="item">
+          <button type="button" id="abstractButton" class="ui button" onclick="msgbox(1);">编辑摘要</button>
+          <input type="hidden" name="digest" id="digest" value="">
+          <input type="hidden" name="manuscript" id="manuscript" value="">
+      </div>
+      <div class="right menu">
+        <div class="item m_no_padding">
+          <button type="button" name="submit" onclick="saveBlog(0);" class="ui button" value="保存草稿"/>
+          保存草稿
+        </div>
+        <div class="item m_no_padding">
+          <button type="button" id="submit" onclick="saveBlog(1);" name="submit" class="ui primary button" value="发布文章"/>
+            发布文章
+        </div>
+      </div>
+    </div>
+  </div>
+  </form>
+</div>
+
+<script type="text/javascript">
+           var testEditor;
+           var label = 1;
+           var label_free = 5;
+           var labels = [
+             { title : 'java'},
+             { title : 'c++'}
+           ];
+
+
+
+
+           $(function() {
+             $.ajax({
+               type:"POST",
+               url:"/blog/getTags",
+               dataType:"json",
+               success:function(result){
+                 labels.length = 0;
+                 for(var i = 0; i < result.length;i++){
+                   labels.push({ title : result[i]});
+                 }
+                 console.log(labels);
+                 $('.ui.search')
+                   .search({
+                   source: labels
+                  });
+               }
+             });
+
+
+
+
+             $(".ui.dropdown").dropdown();
+               testEditor = editormd("markdown-text", {
+                   width: "100%",
+                   height: 680,
+                   path : '/lib/editormd/lib/',
+                   theme : "dark",
+                   previewTheme : "dark",
+                   editorTheme : "pastel-on-dark",
+                   codeFold : true,
+                   atLink    : false,
+                   //syncScrolling : false,
+                   saveHTMLToTextarea : true,    // 保存 HTML 到 Textarea
+                   searchReplace : true,
+                   //watch : false,                // 关闭实时预览
+                   htmlDecode : "style,script,iframe|on*",            // 开启 HTML 标签解析，为了安全性，默认不开启
+                   //toolbar  : false,             //关闭工具栏
+                   //previewCodeHighlight : false, // 关闭预览 HTML 的代码块高亮，默认开启
+                   emoji : true,
+                   taskList : true,
+                   tocm : true,         // Using [TOCM]
+                   tex : true,                   // 开启科学公式TeX语言支持，默认关闭
+                   flowChart : true,             // 开启流程图支持，默认关闭
+                   sequenceDiagram : true,       // 开启时序/序列图支持，默认关闭,
+                   //dialogLockScreen : false,   // 设置弹出层对话框不锁屏，全局通用，默认为true
+                   //dialogShowMask : false,     // 设置弹出层对话框显示透明遮罩层，全局通用，默认为true
+                   //dialogDraggable : false,    // 设置弹出层对话框不可拖动，全局通用，默认为true
+                   //dialogMaskOpacity : 0.4,    // 设置透明遮罩层的透明度，全局通用，默认值为0.1
+                   //dialogMaskBgColor : "#000", // 设置透明遮罩层的背景颜色，全局通用，默认为#fff
+                   imageUpload : true,
+                   imageFormats : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                   imageUploadURL : "/upload/img",
+                   onload : function() {
+                       console.log('onload', this);
+                       //this.fullscreen();
+                       //this.unwatch();
+                       //this.watch().fullscreen();
+
+                       //this.setMarkdown("#PHP");
+                       //this.width("100%");
+                       //this.height(480);
+                       //this.resize("100%", 640);
+                   }
+               });
+
+
+
+          $("#labelsubmit").click(function(){
+            if(label_free == 0){
+              alert("最多5个标签！");
+              return;
+            }
+            var labelvalue = document.getElementById("labelinput").value;
+            if(isnull(labelvalue))
+              return;
+            for(i=1;i<=5-label_free;i++){
+              var test=document.getElementById("label"+i).innerHTML;
+              if(labelvalue.length == test.length && labelvalue.toLowerCase()==test.toLowerCase()){
+                alert("标签已存在！");
+                return;
+              }
+            }
+            document.getElementById("label"+label).innerText=labelvalue;
+            document.getElementById("label"+label+"div").style.visibility="visible";
+            document.getElementById("tag"+label).value = (labelvalue);
+            label++;
+            label_free--;
+            document.getElementById("labelinput").value=null;
+          });
+
+
+          $("#checkcomment").click(function () {
+              if($("#comment").val() == 1){
+                  $("#comment").attr('value',0);
+              } else {
+                  $("#comment").attr('value',1);
+              }
+          });
+               //封装一个限制字数方法
+               var checkStrLengths = function (str, maxLength) {
+                   var maxLength = maxLength;
+                   var result = 0;
+                   if (str && str.length > maxLength) {
+                       result = maxLength;
+                   } else {
+                       result = str.length;
+                   }
+                   return result;
+               }
+
+                //监听评论字数输入
+                //允许摘要200个字符
+               $("#abstractText").on('input propertychange', function () {
+                   //获取输入内容
+                   var userDesc = $(this).val();
+                   //判断字数
+                   var len;
+                   if (userDesc) {
+                       len = checkStrLengths(userDesc, 200);
+                   } else {
+                       len = 0
+                   }
+                   //显示字数
+                   $(".textarea-comment-tip").html('还能输入'+(200-len)+'个字符');
+               });
+
+
+
+
+
+
+           });
+           function delabel(a){
+             var i=a;
+             for(i;i<5-label_free;i++){
+               var test=document.getElementById("label"+(i+1)).innerHTML;
+               document.getElementById("label"+i).innerText=test;
+               document.getElementById("tag"+i).value=test;
+             }
+             document.getElementById("label"+i).innerText="";
+             document.getElementById("label"+i+"div").style.visibility="hidden";
+             document.getElementById("tag"+i).value="";
+             label--;
+             label_free++;
+           }
+           function isnull(val) {
+              var str;
+              if(val!=undefined){
+                str = val.replace(/(^\s*)|(\s*$)/g,'');//去除空格;
+              } else {
+                str = val;
+              }
+
+              if (str == '' || str == undefined || str == null) {
+                return true;
+                console.log('空')
+              } else {
+                return false;
+                console.log('非空');
+            }
+           }
+
+           function msgbox(n){
+               var str = testEditor.getHTML();
+               var ab =  abstractFn(str);
+               if(n==1){
+                 var temp = $("#digest").value;
+                 if(isnull(temp)){
+                   $("#abstractText").val(ab);
+                 } else {
+                   $("#abstractText").val($("#digest").attr('value'));
+                 }
+
+               }
+               document.getElementById('abstractDiv').style.display=n?'block':'none';     /* 点击按钮打开/关闭 对话框 */
+           }
+
+           function abstractFn(res){
+               if(!res){
+                   return '';
+               }else{
+                   var str=res.replace(/(\*\*|__)(.*?)(\*\*|__)/g,'')          //全局匹配内粗体
+                       .replace(/\!\[[\s\S]*?\]\([\s\S]*?\)/g,'')                  //全局匹配图片
+                       .replace(/\[[\s\S]*?\]\([\s\S]*?\)/g,'')                    //全局匹配连接
+                       .replace(/<\/?.+?\/?>/g,'')                                 //全局匹配内html标签
+                       .replace(/(\*)(.*?)(\*)/g,'')                               //全局匹配内联代码块
+                       .replace(/`{1,2}[^`](.*?)`{1,2}/g,'')                       //全局匹配内联代码块
+                       .replace(/```([\s\S]*?)```[\s]*/g,'')                       //全局匹配代码块
+                       .replace(/\~\~(.*?)\~\~/g,'')                               //全局匹配删除线
+                       .replace(/[\s]*[-\*\+]+(.*)/g,'')                           //全局匹配无序列表
+                       //.replace(/[\s]*[0-9]+\.(.*)/g,'')                           //全局匹配有序列表
+                       .replace(/(#+)(.*)/g,'')                                    //全局匹配标题
+                       .replace(/(>+)(.*)/g,'')                                    //全局匹配摘要
+                       .replace(/\r\n/g,"")                                        //全局匹配换行
+                       .replace(/\n/g,"")                                          //全局匹配换行
+                       .replace(/\[.*?\]/,"")
+                   //  .replace(/\s/g,"")                                          //全局匹配空字符;
+                   return str.slice(0,200);
+               }
+           }
+           function saveAbstract() {
+               var str = document.getElementById("abstractText").value;
+               console.log(str);
+               $("#digest").attr('value',str);
+
+           }
+
+           function saveBlog(a) {
+             var title = document.getElementById('title').value;
+             var content = $("#contentText").text();
+             var digest =document.getElementById('digest').value;
+               if(isnull(title)){
+                   alert("标题不能为空");
+                   return false;
+               }
+               if(isnull(digest)){
+                   alert("摘要不能为空");
+                   return false;
+               }
+               if(isnull(content)){
+                   alert("内容不能为空");
+                   return false;
+               }
+               if(a==1){
+                   $("#manuscript").val("发布");
+               }else {
+                   $("#manuscript").val("草稿");
+               }
+               $.ajax({
+                   type: "POST",
+                   dataType: "json",
+                   url:"/user/saveBlog",
+                   data: $('#blog_form').serialize(),
+                   success: function (result) {
+                       console.log(result);
+                       alert("success");
+                       window.location.href="/user/showBlog";
+                       return true;
+                   },
+                   error: function () {
+                       console.log("异常");
+                   }
+               });
+
+    }
+
+
+</script>
+</body>
+</html>

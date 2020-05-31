@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" xmlns:th="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8">
+    <title>我的通知</title>
+    <link rel="stylesheet" type="text/css" href="../../static/css/semantic.min.css" th:href="@{../css/semantic.min.css}">
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../../static/js/semantic.min.js" th:src="@{../js/semantic.min.js}"></script>
+    <link rel="stylesheet" type="text/css" href="../../static/css/common.css" th:href="@{../css/common.css}">
+    <script type="text/javascript" src="../../static/js/header.js" th:src="@{../js/header.js}">  </script>
+  </head>
+  <body>
+    <!-- 导航 -->
+    <div th:replace="/../common::header"></div>
+
+
+    <div class="ui container m_main_top">
+      <div class="ui vertical pointing menu" style="float:left;">
+        <a class="item" href="/user/showInfo">
+          个人信息
+        </a>
+        <a class="item" href="/user/showBlog">
+          我的博文
+        </a>
+        <a class=" item" href="/user/showComment">
+          我的评论
+        </a>
+        <a class="item" href="/user/showConcern">
+          我的关注
+        </a>
+        <a class="item" href="/user/showCollect">
+          我的收藏
+        </a>
+        <a class="item" href="/user/showBlackList">
+          我的黑名单
+        </a>
+        <a class="active item" href="/user/showInform">
+          我的通知
+        </a>
+      </div>
+      <div class="ui raised very padded segment m_middle_width">
+        <div th:fragment="main" id="main">
+          <h2 class="ui header">我的通知</h2>
+          <div class="ui divider"></div>
+          <div class="ui celled list">
+            <div th:each="inform:${informs}">
+  <div class="item">
+    <img class="ui avatar image" th:src="${inform.user.headPortrait}" src="../images/avatar/small/helen.jpg">
+    <button class="ui button" type="button" name="button" th:attr="data-commentid=${inform.id}" onclick="deleteConcern(this)" style="float:right;">删除</button>
+    <button class="ui button" type="button" name="button" th:attr="data-commentid=${inform.id}" onclick="readInform(this)" style="float:right;">已读</button>
+    <span class="content">
+      <span th:if="${inform.readed}==1">[已读]</span>
+      <span th:if="${inform.readed}==0">[未读]</span>
+       <a class="header" th:href="@{/blog/user(userId=${inform.user.id})}" th:text="${inform.user.nickname}">Snickerdoodle</a>
+      <p th:text="${inform.content}"></p>
+    </span>
+    <div class="ui divider"></div>
+  </div>
+
+
+  </div>
+</div>
+        </div>
+        </div>
+      </div>
+    </div>
+
+<script type="text/javascript">
+    $(function() {
+      $(".ui.dropdown").dropdown();
+    });
+    function deleteConcern(obj) {
+        var commentId = $(obj).data('commentid');
+        $('#main').load("/deleteInform",
+            {
+            "informId":commentId
+        },function (responseText,statusTxt,xhr) {
+        });
+    }
+    function readInform(obj) {
+        var commentId = $(obj).data('commentid');
+        $('#main').load("/readInform",
+            {
+            "informId":commentId
+        },function (responseText,statusTxt,xhr) {
+        });
+    }
+
+</script>
+
+  </body>
+</html>

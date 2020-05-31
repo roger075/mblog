@@ -1,0 +1,101 @@
+body{
+    margin: 0;
+    padding: 0;
+    font-family: Microsoft YaHei Regular ;
+    background:  #63B8FF;
+    width: 1900px;
+    font-size: 700;
+}
+
+
+/* 导航栏 */
+#navbar{
+    position: fixed;
+    width: 1980px;
+    height: 50px;
+    background: #F5F5F5;
+    padding: 0 180px;
+    padding-right: 300px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    transition: 0.5s;
+    padding-top: 0px;
+}
+#search{
+    margin-left: 750px;
+    margin-top: 5px;
+}
+
+.headuser{
+    margin-left: 100px !important;
+    margin-top: 0px !important;
+    height: 48px !important;
+    background: #fff !important;
+    border: none !important;
+}
+
+.m_graybg{
+    background: #fff;
+}
+
+.brand{
+    font-size: 1.8em;
+    color: #000000;
+    text-shadow: 0 1px 0 #ccc, 0 2px 0 #c9c9c9, 0 3px 0 #bbb, 0 4px 0 #b9b9b9, 0 5px 0 #aaa, 0 6px 1px rgba(0,0,0,0.1), 0 0 5px rgba(0,0,0,0.1),0 1px 3px rgba(0,0,0,0.3),0 3px 5px rgba(0,0,0,0.2),0 5px 10px rgba(0,0,0,0.25);
+    font-weight: bold;
+    text-decoration: none;
+    padding-top: 10px;
+    white-space: nowrap;
+}
+
+.m_main_top{
+  margin-top: 8em!important;
+}
+.m_middle_width{
+  margin-left: 230px !important;
+  width: auto !important;
+  margin-top: 0px!important;
+}
+
+.m_width{
+  width: 1000px !important;
+}
+
+.m_fontsize{
+  font-size: 17px;
+  margin-top: 15px;
+}
+.m_little_top{
+  margin-top: 20px !important;
+}
+
+.m_mini_margin{
+  margin: auto 10px ;
+}
+
+.m_mini_top{
+  margin-top: 12px !important;
+}
+.m_small_width{
+  margin: auto;
+  width: 30em;
+}
+.m-headPortrait{
+  width: 230px!important;
+  height: 230px!important;
+}
+
+#abstractDiv{
+  display: none;
+  z-index: 99999;
+  width: 500px;
+  height: auto;
+  top: 300px;
+  left: 700px;
+}
+.m_textarea{
+  width: 450px;
+  height: 180px;
+}

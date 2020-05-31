@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" xmlns:th="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8">
+    <title>tag</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/semantic.min.css" th:href="@{/css/semantic.min.css}">
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../static/js/semantic.min.js" th:src="@{/js/semantic.min.js}"></script>
+    <link rel="stylesheet" type="text/css" href="../static/css/common.css" th:href="@{/css/common.css}">
+    <link rel="stylesheet"  href="../static/css/index.css" th:href="@{/css/index.css}">
+    <link rel="stylesheet" href="../static/css/search.css" th:href="@{/css/search.css}">
+    <script type="text/javascript" src="../static/js/header.js" th:src="@{/js/header.js}">  </script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js"></script>
+  <body>
+  <!-- 导航 -->
+  <div th:replace="common::header"></div>
+
+<div th:fragment="main" id="main">
+  <div class="m_main">
+<div class="ui raised segment m_search" >
+  <form class="" name="searchForm" action="/tagSearch">
+  <div class="ui fluid action input">
+    <input type="text" name="searchContent" th:value="${query}" placeholder="搜索...">
+    <div onclick="document.forms['searchForm'].submit()" class="ui button">Search</div>
+  </div>
+  </form>
+</div>
+      <div class="ui raised very padded container segment">
+        <div th:if="${typeActive}==博文">
+        <div class="ui list">
+          <div th:each="blog:${page.content}">
+              <div class="ui text container">
+                  <div class="ui raised segment">
+                      <div>
+                          <a th:href="@{/blog/Detail(blogId=${blog.id})}"><h2 class="ui header" th:text="${blog.title}"></h2></a>
+                      </div>
+                      <p class="description" th:text="${blog.digest}+'...'"></p>
+                      <div class="m_mini_top">
+                          <a href="#" class="" th:text="${blog.user.nickname}"></a>
+                          <a href="#"><img src="" class="ui avatar image" th:src="${blog.user.headPortrait}"/></a>
+                          <div style="float:right;">
+                              <span class="m_mini_margin" ><i class="ui eye icon" th:text="${blog.views}"></i></span>
+                              <span class="m_mini_margin" ><i th:text="${blog.commentList.size()}" class="ui comment icon"></i></span>
+                              <span class="m_mini_margin" ><i th:text="${blog.likes}" class="ui thumbs up icon"></i></span>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+        </div>
+      </div>
+      </div>
+
+  <div class="pageItem">
+      <ul class="pageUl">
+        <input type="hidden" id="pageSum" th:value="${page.totalPages}">
+          <li class="prev"><a href="javascript:;" onclick="page(this)">上一页</a></li>
+          <div th:each="i : ${#numbers.sequence(1,page.totalPages)}">
+            <li class="pageNumber active" th:if="(${page.number}+1)==${i}"><a th:text="${i}" id="activePage" href="javascript:;" onclick="page(this)">1</a></li>
+            <li class="pageNumber" th:if="(${page.number}+1)!=${i}"><a th:text="${i}" href="javascript:;" onclick="page(this)">2</a></li>
+          </div>
+          <li class="next"><a href="javascript:;" onclick="page(this)">下一页</a></li>
+      </ul>
+  </div>
+  </div>
+  </div>
+
+
+
+
+ <script type="text/javascript">
+        function page(obj){
+          var page =  $(obj).text();
+          if(page == "上一页"){
+            page = $("#activePage").text();
+            if(page != 1){
+              page--;
+            }
+          } else if(page == "下一页") {
+            page = $("#activePage").text();
+            if(page != $("#pageSum").attr("value")){
+              page++;
+            }
+          } else {
+          }
+          var searchContent = $("#searchContent").attr("value");
+          var type = $("#activeType").text();
+          $("#main").load("/search",
+              {
+              "searchContent":searchContent,
+              "type": type,
+              "page": page
+          },function (responseText,statusTxt,xhr) {
+            $(window).scrollTo($('#main'),500);
+          });
+        }
+
+        function m_type(obj){
+          var page = 1;
+          var type = $(obj).text();
+          var searchContent = $("#searchContent").attr("value");
+          $("#main").load("/search",
+              {
+              "searchContent":searchContent,
+              "type": type,
+              "page": page
+          },function (responseText,statusTxt,xhr) {
+            $(window).scrollTo($('#main'),500);
+          });
+        }
+
+
+ </script>
+
+
+
+  </body>
+
+
+</html>

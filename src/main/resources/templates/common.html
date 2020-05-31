@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>common</title>
+</head>
+<body>
+    <div th:fragment="header">
+        <!-- 导航 -->
+        <div class="ui fixed menu m_graybg" style="z-index: 10 !important;">
+            <div class="ui container">
+                <a href="/" class="brand header">校园博客</a>
+                <div class="ui category search" id="search">
+                  <form name="search" action="/search" target="_blank">
+                    <div class="ui icon input" >
+                        <input class="prompt" type="text" name="searchContent" placeholder="搜寻">
+                        <i onclick="document.forms['search'].submit()" class="search link icon"></i>
+                    </div>
+                    </form>
+                    <div class="results"></div>
+                </div>
+                <div id="UserInfo" style="display: none">
+                    <div class="ui  menu headuser">
+                        <div class="ui dropdown item">
+                            <a href="#">个人博客</a>
+                            <div class="menu">
+                              <a class="item" href="/user/showBlog">我的博文</a>
+                              <a class="item" href="/user/write">写博客</a>
+                            </div>
+                        </div>
+                        <div class="ui dropdown item">
+                            <a href="#"><img src=""  id="UserImg" class="ui avatar image"/></a>
+                            <div class="menu">
+                                <a class="item" th:if="${admin}!=null" href="/admin/userAudit">管理页面</a>
+                                <a class="item" href="/user/showInfo">个人中心</a>
+                                <a class="item" href="/user/showComment">我的评论</a>
+                                <a class="item" href="/user/showConcern">我的关注</a>
+                                <a class="item"  href="/user/showCollect">我的收藏</a>
+                                <a class="item"  href="/user/showBlackList">我的收藏</a>
+                                <a class="item"  href="/user/showInform">我的通知<div class="floating ui red label" id="informNotRead">22</div></a>
+                                <a class="item" href="/modifyInfo">帐号设置</a>
+                                <a class="item" href="/logout">退出</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="notLogin" style="display: block;">
+                    <div class="ui menu headuser">
+                        <a href="/login" class="item">登录</a>
+                        <a href="/sign-up" class="item">注册</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8">
+  <title>Sign-Up</title>
+  <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+  <link rel="stylesheet"  href="../static/css/signup.css" th:href="@{/css/signup.css}">
+
+</head>
+<body>
+  <div th:fragment="main">
+  <form class="login-form retreveForm" th:action="${action}" method="post">
+    <h1>Retreve</h1>
+    <div th:if="${type}==username">
+    <div class="txtb">
+      <span>Username:</span>
+      <input type="text" name="username" id="username" value=""  maxlength="20" required autofocus>
+    </div>
+
+    <div class="txtb">
+      <span>email:</span>
+      <input type="email" name="email" id="email" value="" onpaste="return false;"  maxlength="20" required >
+    </div>
+
+    <div class="txtb">
+      <span>code:</span>
+      <input type="hidden" name="code" value="">
+      <span class="code"><button type="button" class="logbtn" id="send" onclick="sendEmail()" value="">发送</button></span>
+      <input type="text" name="codeInput" id="codeInput" value="" minlength="6" maxlength="6">
+    </div>
+    <input type="submit" name="" onclick="return checkCode();" class="logbtn" value="下一步">
+    </div>
+
+    <div th:if="${type}==重置">
+      <input type="hidden" name="username" th:value="${username}" value="">
+
+    <div class="txtb">
+      <span>password</span>
+      <input type="password" name="password" id="password" onpaste="return false;" minlength="6" maxlength="20" required >
+    </div>
+
+    <div class="txtb">
+      <span>Repeat the password</span>
+      <input type="password" name="repeat_password" id="password1" onpaste="return false;" minlength="6" maxlength="20" required >
+    </div>
+
+        <input type="submit" class="logbtn" onclick="return checkkkk();" value="Sign Up">
+    </div>
+
+  </form>
+  </div>
+
+  <script type="text/javascript">
+
+    var check = false;
+$(function() {
+});
+
+    function sendEmail(obj) {
+      $.ajax({
+        url: "/sign/sendEmail",
+        type: "post",
+        data: {
+          "username" : get("username").value,
+          "email" :get("email").value
+      },
+        dataType: "json",
+        success: function(result) {
+          if(result.result=="error"){
+            alert(result.message)
+          } else {
+            $("[name='code']").val(result.message);
+            console.log("发送成功");
+            alert("发送成功");
+          }
+        }
+      });
+    }
+
+
+
+    function checkCode() {
+      var code = $("[name='code']").val();
+      var input = $("#codeInput").val();
+      console.log(input);
+      console.log(code);
+      if(code==input){
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    function checkkkk() {
+      var bool = get("password1").value == get("password").value;
+      if(bool){
+        return true;
+      } else {
+        alert("两次密码不一致");
+        return false;
+      }
+
+    }
+    function get(id){
+      return document.getElementById(id);
+    }
+
+
+
+
+
+  </script>
+</body>
+
+</html>

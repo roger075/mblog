@@ -1,0 +1,83 @@
+body{
+  margin: 0;
+  padding: 0;
+  font-family: Microsoft YaHei Regular ;
+  background:  #63B8FF;
+  width: 1920px;
+}
+
+/*main*/
+.main.container{
+  margin-top: 7em!important;
+  margin-left: -6em !important;
+}
+
+.container.right{
+  width: 18em;
+  margin-top: 7em!important;
+  margin-left: 0em !important;
+}
+.m_modules{
+  margin-top: 8.1em !important;
+  margin-left: 28em !important;
+  width: 8em !important;
+}
+p{
+  text-indent: 2em;
+  margin: 5px 2px;
+}
+
+.pageItem{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 15vh;
+}
+
+.pageUl{
+  position: relative;
+  background: #fff;
+  display: flex;
+  padding: 10px 20px;
+  border-radius: 50px;
+  box-shadow: 0 5px 15px rgba(0,0,0,.2);
+}
+
+.pageUl li{
+  list-style: none;
+  line-height: 50px;
+  margin: 0 15px;
+}
+.pageUl li.pageNumber{
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  text-align: center;
+}
+.pageUl li a{
+  display: block;
+  text-decoration: none;
+  color: #777;
+  font-weight: 600;
+  border-radius: 50%;
+}
+.pageUl li.pageNumber:hover a,
+.pageUl li.pageNumber.active a {
+  background: #333;
+  color: #fff;
+}
+
+.pageUl li:first-child{
+  margin-right: 30px;
+  font-weight: 700;
+  font-size: 20px;
+}
+.pageUl li:last-child{
+  margin-left: 30px;
+  font-weight: 700;
+  font-size: 20px;
+}
+

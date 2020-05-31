@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/semantic.min.css" th:href="@{../css/semantic.min.css}">
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../static/js/semantic.min.js" th:src="@{../js/semantic.min.js}"></script>
+    <link rel="stylesheet" type="text/css" href="../static/css/common.css" th:href="@{../css/common.css}">
+    <link rel="stylesheet" type="text/css" href="../static/css/blog.css" th:href="@{../css/blog.css}">
+</head>
+<body>
+<!-- 导航 -->
+<div th:replace="common::header"></div>
+
+<!-- main -->
+<div class="ui card m_card_margin" style="float:left;">
+    <div class="content">
+        <a href="#" th:text="${username}">Alex</a>
+        #<span id="userId" th:text="${userId}"></span>
+        <span class="right floated">粉丝：<span th:text="${userFans}"></span></span>
+    </div>
+    <div class="image">
+        <img src="" th:src="${userHeadPortrait}">
+    </div>
+    <div class="content m_little_height">
+        <div class="ui right floated main menu m_small_menu">
+            <a data-content="关注"  class="popup icon item m_small_item" onclick="concern()">
+                <i class="red heart icon" th:text="${concern}" id="concern">关注</i>
+            </a>
+            <a data-content="拉黑"  class="popup icon item m_small_item" onclick="blackList()">
+                <i class="black bug icon" th:text="${blackList}" id="blackList">拉黑</i>
+            </a>
+        </div>
+        <div>
+            <i class="edit icon" style="white-space: nowrap;margin: 13px 8px;" th:text="${blogAmount}"></i>
+        </div>
+    </div>
+    <div class="extra content">
+        <div class="ui large transparent left icon">
+            <i class="address book outline icon"></i>
+            邮箱：<p th:text="${email}"></p>
+        </div>
+        <div class="ui large transparent left icon">
+            <i class="clipboard outline icon"></i>
+            个人描述：<p th:text="${userDescription}"></p>
+        </div>
+    </div>
+</div>
+
+<!--blog -->
+<div class="ui container m_main_top m_width">
+<div th:fragment="main" id="main">
+    <div class="ui raised very padded container segment">
+      <div class="ui list">
+        <div th:each="blog:${blogList}">
+            <div class="ui text container">
+                <div class="ui raised segment m_bloglist">
+                    <div>
+                        <a th:href="@{/blog/Detail(blogId=${blog.id})}"><h2 class="ui header" th:text="${blog.title}"></h2></a>
+                    </div>
+                    <p class="description" th:text="${blog.digest}+'...'"></p>
+                    <div class="m_mini_top">
+                        <a href="#" class="" th:text="${blog.user.nickname}"></a>
+                        <a href="#"><img src="" class="ui avatar image" th:src="${blog.user.headPortrait}"/></a>
+                        <div style="float:right;">
+                            <span class="m_mini_margin" ><i class="ui eye icon" th:text="${blog.views}"></i></span>
+                            <span class="m_mini_margin" ><i th:text="${blog.commentList.size()}" class="ui comment icon"></i></span>
+                            <span class="m_mini_margin" ><i th:text="${blog.likes}" class="ui thumbs up icon"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+function concern() {
+    var concerned = $("#userId").text();
+    var concern = $("#concern").text();
+    var type = 0;
+    if(concern=="关注")
+        type=1;
+    console.log(concerned);
+    console.log(window.location.href);
+    $.ajax({
+        url:"/user/concern",
+        type:"post",
+        dataType:"json",
+        data: {
+            "concerned":concerned,
+            "type": type
+        },
+        success:function (result) {
+            if(result.message=="关注成功"){
+                console.log(result.message);
+                alert("关注成功");
+                $("#concern").text("已关注");
+            } else if(result.message=="取消关注成功"){
+                console.log(result.message);
+                alert("取消关注成功");
+                $("#concern").text("关注");
+            } else {
+                console.log(result.message);
+                alert("您不可以关注自己！");
+            }
+        },
+        error:function () {
+            var r = confirm("此操作需要用户登录");
+            if(r==true){
+                sessionStorage.setItem("visitUrl",window.location.href);
+                window.location.href="/login";
+            }
+            else return;
+        }
+    });
+}
+function blackList() {
+    var blackListed = $("#userId").text();
+    var blackList = $("#blackList").text();
+    var type = 0;
+    if (blackList == "拉黑")
+        type = 1;
+    console.log(blackListed);
+    $.ajax({
+        url: "/user/blackList",
+        type: "post",
+        dataType: "json",
+        data: {
+            "blackListed": blackListed,
+            "type": type
+        },
+        success: function (result) {
+            if (result.message == "拉黑成功") {
+                console.log(result.message);
+                alert("拉黑成功");
+                $("#blackList").text("已拉黑");
+            } else if (result.message == "取消拉黑成功") {
+                console.log(result.message);
+                alert("取消拉黑成功");
+                $("#blackList").text("拉黑");
+            } else {
+                console.log(result.message);
+                alert("您不可以拉黑自己！");
+            }
+        },
+        error: function () {
+            var r = confirm("此操作需要用户登录");
+            if (r == true){
+                sessionStorage.setItem("visitUrl", window.location.href);
+                window.location.href = "/login";
+            }
+            else return;
+        }
+    });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="|${username}-${title}|">Title</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/semantic.min.css" th:href="@{../css/semantic.min.css}">
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../static/js/semantic.min.js" th:src="@{../js/semantic.min.js}"></script>
+    <link rel="stylesheet" href="../static/lib/editormd/css/editormd.preview.css" th:href="@{/lib/editormd/css/editormd.preview.css}">
+    <script type="text/javascript" src="../static/lib/editormd/lib/marked.min.js" th:src="@{/lib/editormd/lib/marked.min.js}"></script>
+    <script type="text/javascript" src="../static/lib/editormd/lib/prettify.min.js" th:src="@{/lib/editormd/lib/prettify.min.js}"></script>
+    <script type="text/javascript" src="../static/lib/editormd/lib/raphael.min.js" th:src="@{/lib/editormd/lib/raphael.min.js}"></script>
+    <script type="text/javascript" src="../static/lib/editormd/lib/underscore.min.js" th:src="@{/lib/editormd/lib/underscore.min.js}"></script>
+    <script type="text/javascript" src="../static/lib/editormd/lib/sequence-diagram.min.js" th:src="@{/lib/editormd/lib/sequence-diagram.min.js}"></script>
+    <script type="text/javascript" src="../static/lib/editormd/lib/flowchart.min.js" th:src="@{/lib/editormd/lib/flowchart.min.js}"></script>
+    <script type="text/javascript" src="../static/lib/editormd/lib/jquery.flowchart.min.js" th:src="@{/lib/editormd/lib/jquery.flowchart.min.js}"></script>
+    <script type="text/javascript" src="../static/lib/editormd/editormd.js" th:src="@{/lib/editormd/editormd.js}"></script>
+    <link rel="stylesheet" type="text/css" href="../static/css/common.css" th:href="@{/css/common.css}">
+    <link rel="stylesheet" href="../static/lib/editormd/css/editormd.css" th:href="@{/lib/editormd/css/editormd.css}">
+    <script src="https://cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../static/css/blog.css" th:href="@{../css/blog.css}">
+</head>
+<body>
+<!-- 导航 -->
+<div th:replace="common::header"></div>
+
+  <!-- main -->
+  <input type="hidden" name="blogId" id="blogId" th:value="${blogId}">
+  <div class="ui card m_card_margin" style="float:left;">
+  <div class="content">
+     <a  th:text="${username}" th:href="@{/blog/user(userId=${userId})}">Alex</a>
+      #<span id="userId" th:text="${userId}"></span>
+      &emsp; <span th:if="${teacher}!=null"><i class="ui teal tag label">教师认证</i></span>
+      <span class="right floated">粉丝：<span th:text="${userFans}"></span></span>
+  </div>
+  <div class="image">
+    <img src="" th:src="${userHeadPortrait}">
+  </div>
+  <div class="content m_little_height">
+      <div class="ui right floated main menu m_small_menu">
+          <a data-content="关注"  class="popup icon item m_small_item" onclick="concern()">
+              <i class="red heart icon" th:text="${concern}" id="concern">关注</i>
+          </a>
+          <a data-content="拉黑"  class="popup icon item m_small_item" onclick="blackList()">
+              <i class="black bug icon" th:text="${blackList}" id="blackList">拉黑</i>
+          </a>
+      </div>
+      <div>
+          <i class="edit icon" style="white-space: nowrap;margin: 13px 8px;" th:text="${blogAmount}"></i>
+      </div>
+  </div>
+  <div class="extra content">
+      <div class="ui large transparent left icon">
+          <i class="address book outline icon"></i>
+          邮箱：<p th:text="${email}"></p>
+      </div>
+    <div class="ui large transparent left icon">
+      <i class="clipboard outline icon"></i>
+      个人描述：<p th:text="${userDescription}"></p>
+    </div>
+  </div>
+  </div>
+    <div class="content tagList" style="float: right;">
+    <div th:each="tag:${tagList}">
+        <a th:href="@{/tag/blog(tagId = ${tag.Id})}" class="ui blue tag large label" th:text="${tag.name}"></a>
+    </div>
+    </div>
+
+  <div class="ui container m_main_top m_width">
+    <div class="ui raised very padded segment" id="showMain">
+        <div class="right ui rail m_catelog">
+            <div class="ui sticky" id="sticky">
+                <br>
+                <br>
+                <div id="catelog"></div>
+            </div>
+        </div>
+      <h2 class="ui header" th:text="${title}"></h2>
+      <span><i class="ui red tag label" th:text="${copyright}">原创</i></span>
+      <span class="m_small_margin"><a href="#" th:text="${username}">Alex</a></span>
+      <span class="m_small_margin" th:text="${#dates.format(updateTime,'yyyy/MM/dd HH:mm')}"></span>
+      <span class="m_small_margin"><i class="ui eye icon" th:text="${views}">156</i></span>
+      <span class="m_small_margin"><i class="ui star icon" style="white-space: nowrap;" th:text="${collect}" onclick="collect()" name="collect">收藏</i></span>
+      <div class="ui divider"></div>
+      <div>
+          <div id="write" class="is-node">
+              <textarea style="display: none;" th:text="${content}"></textarea>
+          </div>
+    </div>
+    <div class="ui labeled button" tabindex="0">
+  <div class="ui red button" onclick="collect()">
+    <i class="star icon" name="collect" style="display: inline;" th:text="${collect}">收藏</i>
+  </div>
+  <a class="ui basic red left pointing label" th:text="${collects}">
+    1,048
+  </a>
+</div>
+<div class="ui labeled button" tabindex="0">
+  <div class="ui basic blue button">
+    <i class="thumbs up outline icon" style="display: inline;" name="like" onclick="like()">点赞</i>
+  </div>
+  <a class="ui basic left pointing blue label" th:text="${likes}" name="likes">
+    1,048
+  </a>
+</div>
+<div class="ui labeled button" tabindex="0" onclick="msgbox(1);">
+  <div class="ui basic blue button">
+    <i class="bullhorn icon" style="display: inline;" name="report" th:text="${report}">举报</i>
+  </div>
+</div>
+<div class="editormd-dialog" id="abstractDiv" style="display: none;">
+        <div class="editormd-dialog-header" style="cursor: move;">
+            <strong class="editormd-dialog-title">举报</strong>
+        </div>
+        <a href="javascript:;" class="fa fa-close editormd-dialog-close" onclick="msgbox(0);return false;"></a>
+        <div class="editormd-dialog-container">
+            <form class="editormd-form">
+                <label>举报理由</label>
+                <br>
+                <textarea class="m_textarea" id="abstractText" placeholder="输入举报理由" maxlength="200"></textarea>
+                <span class="textarea-comment-tip">还可以输入200个字符</span>
+                <div class="editormd-dialog-footer">
+                    <button type="button" class="editormd-btn" onclick="report();">确定</button>
+                    <button type="button" class="editormd-btn" onclick="msgbox(0);">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+  </div>
+
+  <div class="ui container m_width" th:if="${comments}!=0">
+   <div class="ui raised very padded segment">
+     <div class="ui comments" style="max-width: 100%!important;">
+  <h3 class="ui dividing header">Comments</h3>
+  <div id="comment-container">
+      <div th:fragment="commentList">
+          <div class="comment" th:each="comment : ${comments}">
+              <a class="avatar">
+                  <img src="" th:src="@{${comment.user.headPortrait}}">
+              </a>
+              <div class="content">
+                  <a class="author" th:href="@{/blog/user(userId=${comment.user.id})}" th:text="${comment.user.nickname}">Elliot Fu</a>
+                  <div class="metadata">
+                      <span class="date" th:text="${#dates.format(comment.commentTime,'yyyy-MM-dd HH:mm')}">Yesterday at 12:30AM</span>
+                  </div>
+                  <div class="text" th:text="${comment.content}">
+                      <p>This has been very useful for my research. Thanks as well!</p>
+                  </div>
+                  <div class="actions">
+                      <a class="reply" th:attr="data-commentid=${comment.id},data-commentnickname=${comment.user.nickname}" onclick="reply(this)">Reply</a>
+                  </div>
+              </div>
+              <div class="comments" th:if="${#arrays.length(comment.replyCommentList)}>0">
+                  <div class="comment" th:each="reply: ${comment.replyCommentList}">
+                      <a class="avatar">
+                          <img src="" th:src="@{${reply.user.headPortrait}}">
+                      </a>
+                      <div class="content">
+                          <a class="author">
+                             <span th:text="${reply.user.nickname}" th:href="@{/blog/user(userId=${reply.user.id})}">Jenny Hess</span>&nbsp; <span th:text="|@ ${reply.parentComment.user.nickname}|" class="m_blue"></span>
+                          </a>
+                          <div class="metadata">
+                              <span class="date" th:text="${#dates.format(reply.commentTime,'yyyy-MM-dd HH:mm')}">Just now</span>
+                          </div>
+                          <div class="text" th:text="${reply.content}">
+                              Elliot you are always so right :)
+                          </div>
+                          <div class="actions">
+                              <a class="reply" th:attr="data-commentid=${reply.id},data-commentnickname=${reply.user.nickname}" onclick="reply(this)">Reply</a>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+         <form class="ui reply form" id="comment-form">
+      <input type="hidden" name="blogId" th:value="${blogId}">
+      <input type="hidden" name="parentComment" value="-1">
+    <div class="field">
+      <textarea name="content" placeholder="输入评论信息..."></textarea>
+    </div>
+    <div>
+        <button id="comment-btn" type="button" class="ui primary button"><i class="icon edit"></i> Add Reply</button>
+    </div>
+  </form>
+  </div>
+   </div>
+  </div>
+  </div>
+
+
+
+
+  <script type="text/javascript">
+      var user= null;
+      $(function() {
+        $(".ui.dropdown").dropdown();
+        //封装一个限制字数方法
+        var checkStrLengths = function (str, maxLength) {
+            var maxLength = maxLength;
+            var result = 0;
+            if (str && str.length > maxLength) {
+                result = maxLength;
+            } else {
+                result = str.length;
+            }
+            return result;
+        }
+        //监听评论字数输入
+        //允许摘要200个字符
+       $("#abstractText").on('input propertychange', function () {
+           //获取输入内容
+           var userDesc = $(this).val();
+           //判断字数
+           var len;
+           if (userDesc) {
+               len = checkStrLengths(userDesc, 200);
+           } else {
+               len = 0
+           }
+           //显示字数
+           $(".textarea-comment-tip").html('还能输入'+(200-len)+'个字符');
+       });
+          $.ajax({
+              url: "/index/getUser",
+              type: "post",
+              dataType: "json",
+              success: function (result) {
+                  if(result.message == "获取成功"){
+                      document.getElementById("UserInfo").style.display="block";
+                      document.getElementById("notLogin").style.display="none";
+                      $("#UserImg").attr("src",result.headPortrait);
+                      user = "user";
+                  } else {
+                      document.getElementById("notLogin").style.display="block";
+                      document.getElementById("UserInfo").style.display="none";
+                  }
+              }
+          });
+
+
+
+          var testEditor = editormd.markdownToHTML("write", {//注意：这里是上面DIV的id
+              htmlDecode : "style,script,iframe",
+              emoji : true,
+              tocm : true,
+              tocContainer    : "#catelog", // 自定义 ToC 容器层
+              taskList : true,
+              tex : true, // 默认不解析
+              flowChart : true, // 默认不解析
+              sequenceDiagram : true, // 默认不解析
+              codeFold : true
+          });
+
+          $('#sticky')
+              .sticky({
+                  context: '#showMain',
+                  pushing: true
+              });
+
+      });
+      function msgbox(n){
+          document.getElementById('abstractDiv').style.display=n?'block':'none';     /* 点击按钮打开/关闭 对话框 */
+      }
+
+      function report(){
+        var blogId = $("#blogId").attr("value");
+        var reportContent = document.getElementById("abstractText").value;
+        var report =$("[name='report']").text();
+        var type = 0;
+        if(report == "举报")
+          type = 1;
+        console.log("举报："+blogId);
+        if(reportContent==null){
+          alert("举报理由不能为空!");
+        }
+        $.ajax({
+            url:"/user/report",
+            type:"post",
+            dataType:"json",
+            data: {
+                "blogId":blogId,
+                "type":type,
+                "reportContent": reportContent
+            },
+            success:function (result) {
+                if(result.message=="举报成功"){
+                    console.log(result.message);
+                    alert("举报成功");
+                    $("[name='report']").text("已举报");
+                    msgbox(0);
+                } else if(result.message=="取消举报成功"){
+                    console.log(result.message);
+                    alert("取消举报成功");
+                    $("[name='report']").text("举报");
+                } else {
+                    console.log(result.message);
+                    alert("您不可以举报自己！");
+                }
+            },
+            error:function () {
+                var r = confirm("此操作需要用户登录");
+                if(r==true){
+                    sessionStorage.setItem("visitUrl",window.location.href);
+                    window.location.href="/login";
+                }
+                else return;
+            }
+        });
+      }
+
+      function concern() {
+          var concerned = $("#userId").text();
+          var concern = $("#concern").text();
+          var type = 0;
+          if(concern=="关注")
+              type=1;
+          console.log(concerned);
+          console.log(window.location.href);
+          $.ajax({
+              url:"/user/concern",
+              type:"post",
+              dataType:"json",
+              data: {
+                  "concerned":concerned,
+                  "type": type
+              },
+              success:function (result) {
+                  if(result.message=="关注成功"){
+                      console.log(result.message);
+                      alert("关注成功");
+                      $("#concern").text("已关注");
+                  } else if(result.message=="取消关注成功"){
+                      console.log(result.message);
+                      alert("取消关注成功");
+                      $("#concern").text("关注");
+                  } else {
+                      console.log(result.message);
+                      alert("您不可以关注自己！");
+                  }
+              },
+              error:function () {
+                  var r = confirm("此操作需要用户登录");
+                  if(r==true){
+                      sessionStorage.setItem("visitUrl",window.location.href);
+                      window.location.href="/login";
+                  }
+                  else return;
+              }
+          });
+      }
+      function blackList() {
+          var blackListed = $("#userId").text();
+          var blackList = $("#blackList").text();
+          var type = 0;
+          if (blackList == "拉黑")
+              type = 1;
+          console.log(blackListed);
+          $.ajax({
+              url: "/user/blackList",
+              type: "post",
+              dataType: "json",
+              data: {
+                  "blackListed": blackListed,
+                  "type": type
+              },
+              success: function (result) {
+                  if (result.message == "拉黑成功") {
+                      console.log(result.message);
+                      alert("拉黑成功");
+                      $("#blackList").text("已拉黑");
+                  } else if (result.message == "取消拉黑成功") {
+                      console.log(result.message);
+                      alert("取消拉黑成功");
+                      $("#blackList").text("拉黑");
+                  } else {
+                      console.log(result.message);
+                      alert("您不可以拉黑自己！");
+                  }
+              },
+              error: function () {
+                  var r = confirm("此操作需要用户登录");
+                  if (r == true){
+                      sessionStorage.setItem("visitUrl", window.location.href);
+                      window.location.href = "/login";
+                  }
+                  else return;
+              }
+          });
+      }
+
+      function like(){
+        var like = $("[name='like']").text();
+        var blogId = $("#blogId").attr("value");
+        var type = 0;
+        var likes = $("[name='likes']").text();
+        if(like=="点赞")
+            type=1;
+        console.log(like);
+        console.log(window.location.href);
+        $.ajax({
+            url:"/user/like",
+            type:"post",
+            dataType:"json",
+            data: {
+                "blogId":blogId,
+                "type": type
+            },
+            success:function (result) {
+                if(result.message=="点赞成功"){
+                    console.log(result.message);
+                    $("[name='like']").text("已点赞");
+                    likes++;
+                    $("[name='likes']").text(likes);
+                } else if(result.message=="取消点赞成功"){
+                    console.log(result.message);
+                    $("[name='like']").text("点赞");
+                    likes--;
+                    $("[name='likes']").text(likes);
+                } else {
+                    console.log(result.message);
+                    alert("您不可以点赞自己的博文！");
+                }
+            },
+            error:function () {
+                var r = confirm("此操作需要用户登录");
+                if(r==true){
+                    sessionStorage.setItem("visitUrl",window.location.href);
+                    window.location.href="/login";
+                }
+                else return;
+            }
+        });
+      }
+
+      function collect() {
+          var blogId = $("#blogId").attr("value");
+          var collect = $("[name='collect']").text();
+          var type = 0;
+          if(collect=="收藏收藏")
+              type=1;
+          console.log(collect);
+          console.log(window.location.href);
+          $.ajax({
+              url:"/user/collect",
+              type:"post",
+              dataType:"json",
+              data: {
+                  "blogId":blogId,
+                  "type": type
+              },
+              success:function (result) {
+                  if(result.message=="收藏成功"){
+                      console.log(result.message);
+                      alert("收藏成功");
+                      $("[name='collect']").text("已收藏");
+                  } else if(result.message=="取消收藏成功"){
+                      console.log(result.message);
+                      alert("取消收藏成功");
+                      $("[name='collect']").text("收藏");
+                  } else {
+                      console.log(result.message);
+                      alert("您不可以收藏自己的博文！");
+                  }
+              },
+              error:function () {
+                  var r = confirm("此操作需要用户登录");
+                  if(r==true){
+                      sessionStorage.setItem("visitUrl",window.location.href);
+                      window.location.href="/login";
+                  }
+                  else return;
+              }
+          });
+      }
+
+      $('.ui.form').form({
+          fields: {
+              title: {
+                  identifier:'content',
+                  rules:[{
+                      type:'empty',
+                      prompt:'请输入评论内容'
+                  }]
+              }
+          }
+      });
+
+      $('#comment-btn').click(function () {
+          var boo = $('.ui.form').form('validate form');
+          if(boo){
+              if(user == null){
+                  var r = confirm("此操作需要用户登录");
+                  if (r == true){
+                      sessionStorage.setItem("visitUrl",window.location.href);
+                      window.location.href = "/login";
+                  }
+                  else return;
+              }
+              postData();
+              console.log('校验成功');
+          }else {
+              console.log('校验失败');
+          }
+      });
+
+      function postData() {
+          $('#comment-container').load("/user/addComment",
+              {
+              "parentCommentId": $("[name='parentComment']").val(),
+              "blogId": $("[name='blogId']").val(),
+              "content": $("[name='content']").val()
+          },function (responseText,statusTxt,xhr) {
+              clearContent();
+          });
+      }
+
+      function clearContent() {
+          $("[name='content']").val('');
+          $("[name='parentComment']").val(-1);
+          $("[name='content']").attr("placeholder","输入回复信息.." );
+      }
+
+      function reply(obj) {
+          var commentId = $(obj).data('commentid');
+          var commentNickname = $(obj).data('commentnickname');
+          $("[name='content']").attr("placeholder","@"+commentNickname).focus();
+          $("[name='parentComment']").val(commentId);
+          $(window).scrollTo($('#comment-form'),500);
+      }
+
+
+
+  </script>
+</body>
+</html>

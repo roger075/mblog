@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8">
+  <title>login</title>
+  <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+  <link rel="stylesheet"   href="../static/css/login.css" th:href="@{/css/login.css}">
+</head>
+<body>
+  <form class="login-form">
+    <h1>Login</h1>
+
+    <div class="txtb">
+      <input type="text" name="username" id="username" value="" maxlength="20" required="required">
+      <span data-placeholder="Username"></span>
+    </div>
+
+    <div class="txtb">
+      <input type="password" name="password" id="password" value="" onpaste="return false;" maxlength="20" required="required" >
+      <span data-placeholder="Password"></span>
+    </div>
+
+    <input type="button" class="logbtn" value="Login" onclick="login()">
+    <div class="bottom-text">
+      Don't have account? <a href="/sign-up">Sign up</a>
+    </div>
+    <div>
+      Don't remember password? <a href="/sign/retrieve">Retrieve</a>
+    </div>
+  </form>
+
+  <script type="text/javascript">
+    $(".txtb input").on("focus",function(){
+      $(this).addClass("focus");
+    });
+
+    $(".txtb input").on("blur",function(){
+      if($(this).val() == "")
+      $(this).removeClass("focus");
+    });
+
+    function login() {
+      var username = $("#username").val();
+      var password = $("#password").val();
+      $.ajax({
+        type:"POST",
+        url:"/loginHandle",
+        data:{
+          "username":username,
+          "password":password
+        },
+        dataType:"json",
+        success:function (result) {
+            if(result.msg=="登录成功"){
+              alert("登录成功");
+              var url = sessionStorage.getItem("visitUrl");
+              if(url==null){
+                window.location.href ="http://localhost:8080";
+              } else {
+                window.location.href=url;
+                sessionStorage.removeItem("visitUrl");
+              }
+            } else {
+              alert(result.data);
+            }
+        }
+      });
+
+    }
+
+
+
+
+  </script>
+</body>
+
+</html>

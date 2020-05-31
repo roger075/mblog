@@ -1,0 +1,49 @@
+
+
+
+.m_main{
+  margin-left: auto!important;
+  margin-right: auto!important;
+  margin-top: 4.8em!important;
+  width: 80%!important;
+}
+.m_label{
+  width: 700px !important;
+}
+.m_center{
+  margin: 1em auto !important;
+}
+.m_dicon{
+  margin-left: 3px !important;
+  margin-right: 0px !important;
+}
+#searchlabel{
+  margin: auto;
+}
+
+.m_small_top{
+  margin-top: 8px;
+}
+.m_no_padding{
+  padding: 0px 3px!important;
+
+}
+.m_aoto_width{
+  width: auto!important;
+}
+.m_mini_left{
+  margin-left: 15px !important;
+}
+
+#abstractDiv{
+  display: none;
+  z-index: 99999;
+  width: 500px;
+  height: auto;
+  top: 300px;
+  left: 700px;
+}
+.m_textarea{
+  width: 450px;
+  height: 180px;
+}

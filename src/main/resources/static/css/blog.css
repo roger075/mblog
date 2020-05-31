@@ -1,0 +1,45 @@
+.m_card_margin{
+  margin-left: 158px!important;
+  margin-top: 0px!important;
+}
+.m_small_margin{
+  margin: auto 10px;
+}
+.m_mini_top{
+  margin-top: 15px;
+  font-size: 15px;
+}
+.m_little_height{
+  height: 70px;
+}
+.ui.star.icon:hover{
+  color: orange;
+}
+
+.tagList{
+  margin-right: 310px;
+  left: auto;
+}
+
+.m_catelog{
+  margin-left: 0!important;
+  margin-top: 300px!important;
+  line-height: 2.4;
+  font-weight: bold !important;
+  font-family: STHeiti !important;
+  color: black !important;
+  padding-left: 5px!important;
+}
+.m_small_item{
+  padding: 8px 10px 8px 10px!important;
+}
+.m_small_menu{
+  height: 25px!important;
+}
+.m_blue{
+  color: #0d71bb!important;
+}
+.m_bloglist{
+  width: 900px !important;
+  margin-left: -100px!important;
+}

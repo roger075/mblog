@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8">
+  <title>Sign-Up</title>
+  <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+  <link rel="stylesheet"  href="../static/css/signup.css" th:href="@{/css/signup.css}">
+
+</head>
+<body>
+  <form class="login-form" action="/sign/save" method="post">
+    <h1>Sign Up</h1>
+
+    <div class="txtb">
+      <span>Username:</span>
+      <input type="text" name="username" id="username" value=""  maxlength="20" required autofocus>
+    </div>
+
+    <div class="txtb">
+      <span>Password</span>
+      <input type="password" name="password" id="password" value="" onpaste="return false;" minlength="6" maxlength="20" required >
+    </div>
+
+    <div class="txtb">
+      <span>Repeat the password</span>
+      <input type="password" name="repeat_password" id="password1" onpaste="return false;" minlength="6" maxlength="20" required >
+    </div>
+
+    <div class="txtb">
+      <span>Nickname:</span>
+      <input type="text" name="nickname" id="nickname" value="" maxlength="20" required>
+    </div>
+    <div class="txtb">
+      <span>Email:</span>
+      <input type="email" name="email" id="email" value="" maxlength="20" required>
+    </div>
+    <input type="submit" class="logbtn" onclick="return checkkkk();" value="Sign Up">
+  </form>
+
+  <script type="text/javascript">
+
+    var check = false;
+$(function() {
+  $("#username").on("blur",function() {
+    $.ajax({
+      url: "/sign/checkUser",
+      type: "post",
+      data: {
+        "username" : get("username").value,
+        "email" : get("email").value
+    },
+      dataType: "json",
+      success: function(result) {
+        if (result.message == "用户名已存在") {
+          check = false;
+          alert(result.message);
+        } else if(result.message =="email已存在") {
+          check = false;
+          alert(result.message);
+        } else {
+          check = true;
+        }
+      }
+    })
+  });
+  $("#eamil").on("blur",function() {
+    $.ajax({
+      url: "/sign/checkUser",
+      type: "post",
+      data: {
+        "username" : get("username").value,
+        "email" : get("email").value
+    },
+      dataType: "json",
+      success: function(result) {
+        if (result.message == "用户名已存在") {
+          check = false;
+          alert(result.message);
+        } else if(result.message =="email已存在") {
+          check = false;
+          alert(result.message);
+        } else {
+          check = true;
+        }
+      }
+    })
+  });
+  $(".txtb input").on("blur",function(){
+    if($(this).val() == "")
+    $(this).removeClass("focus");
+  });
+
+});
+
+    function checkInfo() {
+      $.ajax({
+        url: "/sign/checkUser",
+        type: "post",
+        data: {
+          "username" : get("username").value,
+          "email" :get("email").value
+      },
+        dataType: "json",
+        success: function(result) {
+          if (result.message == "用户名已存在") {
+            check = false;
+            alert(result.message);
+          } else if(result.message =="email已存在") {
+            check = false;
+            alert(result.message);
+          } else {
+            check = true;
+          }
+        }
+      });
+    }
+
+    function checkkkk() {
+      var bool = get("password1").value == get("password").value;
+      checkInfo();
+      if(bool&&check){
+        return true;
+      } else if(check){
+        alert("两次密码不一致");
+        return false;
+      }
+      else if(bool){
+        alert("用户名或email已存在");
+        return false;
+      } else {
+        alert("用户名已存在，且两次密码不一致");
+        return false;
+      }
+    }
+    function get(id){
+      return document.getElementById(id);
+    }
+
+
+
+
+
+  </script>
+</body>
+
+</html>
